@@ -2,7 +2,7 @@
     // Supabase credentials.
     const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
-    const CUSTOMERS_TABLE_NAME = 'Das';
+    const CUSTOMERS_TABLE_NAME = 'customer_data'; // ✅ CORRECTED TABLE NAME
 
     // Initialize Supabase client
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -12,27 +12,22 @@
         const finconCode = event.target.value.trim().toUpperCase();
         if (finconCode) {
             try {
-                // ✅ CORRECTED QUERY: Quotes added to column names with spaces
                 const { data: customer, error } = await _supabase
                     .from(CUSTOMERS_TABLE_NAME)
                     .select('"Client Type", "Contact Name", "Contact Title", "Contact details", "Area of interest"')
-                    .eq('"FINCON CODE"', finconCode) // <-- Corrected this line
-                    .single(); // <-- Using .single() is cleaner
+                    .eq('"FINCON CODE"', finconCode) 
+                    .single(); 
 
                 if (error) {
-                    // If .single() finds no row, it returns an error, which we can handle gracefully.
                     if (error.code === 'PGRST116') {
-                        // Clear the form if no match is found
                         document.getElementById('inputForm').reset();
-                        // Re-set the finconCode as reset() clears everything
                         document.getElementById('finconCode').value = finconCode; 
                         alert('No customer found with that FINCON CODE.');
                     } else {
-                        throw error; // For other types of errors
+                        throw error;
                     }
                 }
                 
-                // ✅ SIMPLIFIED DATA HANDLING: .single() returns an object directly
                 if (customer) {
                     document.getElementById('clientType').value = customer['Client Type'] || '';
                     document.getElementById('contactName').value = customer['Contact Name'] || '';
