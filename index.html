@@ -1,291 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAS OT - CRM Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-        .header {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .header h1 {
-            margin: 0 0 10px 0;
-            font-size: 2.5em;
-            color: #333;
-        }
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .header-nav input[type="text"] {
-            padding: 8px 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1em;
-            width: 200px;
-        }
-        .nav-button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .nav-button:hover {
-            background-color: #45a049;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 20px;
-        }
-        .dashboard-section h2 {
-            font-size: 2em;
-            margin-top: 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ddd;
-        }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .dashboard-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            padding: 20px;
-        }
-        .dashboard-card h3 {
-            margin-top: 0;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .btn-submit {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .btn-submit:hover {
-            background-color: #45a049;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-    </style>
-</head>
-<body>
+<script>
+    // Supabase credentials.
+    const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
+    const CUSTOMERS_TABLE_NAME = 'Das';
 
-    <div class="header">
-        <h1>DAS OT - CRM Dashboard</h1>
-        <div class="header-nav">
-            <input type="text" placeholder="Search..." aria-label="Search">
-            <button class="nav-button">Add New Opportunity</button>
-            <button class="nav-button">Customer Data</button>
-            <button class="nav-button">Login / Sign-up</button>
-        </div>
-    </div>
-    
-    <div class="container">
-        <div class="dashboard-section">
-            <h2>New Sales Opportunity</h2>
-            <div class="dashboard-card">
-                <h3>Form</h3>
-                <form id="inputForm">
-                    <div class="dashboard-grid">
-                        <div class="form-group">
-                            <label for="finconCode">FINCON CODE:</label>
-                            <input type="text" id="finconCode" name="finconCode" placeholder="Enter FINCON CODE">
-                        </div>
-                        <div class="form-group">
-                            <label for="clientType">Client Type:</label>
-                            <input type="text" id="clientType" name="clientType" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactName">Contact Name:</label>
-                            <input type="text" id="contactName" name="contactName" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactTitle">Contact Title:</label>
-                            <input type="text" id="contactTitle" name="contactTitle" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="contactDetails">Contact Details:</label>
-                            <input type="text" id="contactDetails" name="contactDetails" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="areaOfInterest">Area of interest:</label>
-                            <input type="text" id="areaOfInterest" name="areaOfInterest" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="openDate">Open date:</label>
-                            <input type="date" id="openDate" name="openDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="openPeriod">Open Period:</label>
-                            <input type="text" id="openPeriod" name="openPeriod" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="opportunityValue">Opportunity Value:</label>
-                            <input type="number" id="opportunityValue" name="opportunityValue">
-                        </div>
-                        <div class="form-group">
-                            <label for="likelihood">Likelihood of success?:</label>
-                            <input type="number" id="likelihood" name="likelihood">
-                        </div>
-                        <div class="form-group">
-                            <label for="modeOfSale">Mode of Sale:</label>
-                            <select id="modeOfSale" name="modeOfSale">
-                                <option value="">Select...</option>
-                                <option value="Walk in">Walk in</option>
-                                <option value="Email">Email</option>
-                                <option value="Customer Visit">Customer Visit</option>
-                                <option value="Whatsapp">Whatsapp</option>
-                                <option value="Government">Government</option>
-                                <option value="Telephone Call">Telephone Call</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="status">Status:</label>
-                            <select id="status" name="status">
-                                <option value="">Select...</option>
-                                <option value="Open">Open</option>
-                                <option value="Escalated">Escalated</option>
-                                <option value="ARQ">Awaiting Response to Quote (ARQ)</option>
-                                <option value="Won">Won</option>
-                                <option value="Lost">Lost</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        </div>
-                         <div class="form-group">
-                            <label for="salesMade">Sales Made (BWP):</label>
-                            <input type="number" id="salesMade" name="salesMade">
-                        </div>
-                        <div class="form-group">
-                            <label for="invoiceDate">Invoice Date:</label>
-                            <input type="date" id="invoiceDate" name="invoiceDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="invoicePeriod">Invoice Period:</label>
-                            <input type="text" id="invoicePeriod" name="invoicePeriod" readonly>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-submit">Save</button>
-                        <button type="reset" class="btn-submit">Reset</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    // Initialize Supabase client
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <script>
-        // Supabase credentials. These have been updated with the values you provided.
-        const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
-        const CUSTOMERS_TABLE_NAME = 'Das'; // Assumes your sheet is called 'Das'
+    // Event listener for the FINCON CODE input field
+    document.getElementById('finconCode').addEventListener('change', async (event) => {
+        const finconCode = event.target.value.trim().toUpperCase();
+        if (finconCode) {
+            try {
+                // ✅ CORRECTED QUERY: Quotes added to column names with spaces
+                const { data: customer, error } = await _supabase
+                    .from(CUSTOMERS_TABLE_NAME)
+                    .select('"Client Type", "Contact Name", "Contact Title", "Contact details", "Area of interest"')
+                    .eq('"FINCON CODE"', finconCode) // <-- Corrected this line
+                    .single(); // <-- Using .single() is cleaner
 
-        // Initialize Supabase client
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Event listener for the FINCON CODE input field
-        document.getElementById('finconCode').addEventListener('change', async (event) => {
-            const finconCode = event.target.value.trim().toUpperCase();
-            if (finconCode) {
-                try {
-                    const { data, error } = await _supabase
-                        .from(CUSTOMERS_TABLE_NAME)
-                        .select('Client Type, "Contact Name", "Contact Title", "Contact details", "Area of interest"')
-                        .eq('FINCON CODE', finconCode)
-                        .limit(1);
-
-                    if (error) {
-                        throw error;
-                    }
-                    
-                    if (data && data.length > 0) {
-                        const customer = data[0];
-                        document.getElementById('clientType').value = customer['Client Type'] || '';
-                        document.getElementById('contactName').value = customer['Contact Name'] || '';
-                        document.getElementById('contactTitle').value = customer['Contact Title'] || '';
-                        document.getElementById('contactDetails').value = customer['Contact details'] || '';
-                        document.getElementById('areaOfInterest').value = customer['Area of interest'] || '';
-                    } else {
+                if (error) {
+                    // If .single() finds no row, it returns an error, which we can handle gracefully.
+                    if (error.code === 'PGRST116') {
                         // Clear the form if no match is found
-                        document.getElementById('clientType').value = '';
-                        document.getElementById('contactName').value = '';
-                        document.getElementById('contactTitle').value = '';
-                        document.getElementById('contactDetails').value = '';
-                        document.getElementById('areaOfInterest').value = '';
+                        document.getElementById('inputForm').reset();
+                        // Re-set the finconCode as reset() clears everything
+                        document.getElementById('finconCode').value = finconCode; 
                         alert('No customer found with that FINCON CODE.');
+                    } else {
+                        throw error; // For other types of errors
                     }
-                } catch (error) {
-                    console.error('Lookup failed:', error.message);
-                    alert('An error occurred during lookup. Check the console for details.');
                 }
+                
+                // ✅ SIMPLIFIED DATA HANDLING: .single() returns an object directly
+                if (customer) {
+                    document.getElementById('clientType').value = customer['Client Type'] || '';
+                    document.getElementById('contactName').value = customer['Contact Name'] || '';
+                    document.getElementById('contactTitle').value = customer['Contact Title'] || '';
+                    document.getElementById('contactDetails').value = customer['Contact details'] || '';
+                    document.getElementById('areaOfInterest').value = customer['Area of interest'] || '';
+                }
+
+            } catch (error) {
+                console.error('Lookup failed:', error.message);
+                alert('An error occurred during lookup. Check the console for details.');
             }
-        });
-
-        // Function to format a date to MM-YY
-        function formatPeriod(dateInput) {
-            if (!dateInput) return '';
-            const date = new Date(dateInput);
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const year = date.getFullYear().toString().slice(-2);
-            return `${month}-${year}`;
         }
+    });
 
-        // Event listener for the Open date field to populate Open Period
-        document.getElementById('openDate').addEventListener('change', (event) => {
-            document.getElementById('openPeriod').value = formatPeriod(event.target.value);
-        });
+    // Function to format a date to MM-YY
+    function formatPeriod(dateInput) {
+        if (!dateInput) return '';
+        const date = new Date(dateInput);
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear().toString().slice(-2);
+        return `${month}-${year}`;
+    }
 
-        // Event listener for the Invoice date field to populate Invoice Period
-        document.getElementById('invoiceDate').addEventListener('change', (event) => {
-            document.getElementById('invoicePeriod').value = formatPeriod(event.target.value);
-        });
+    // Event listener for the Open date field to populate Open Period
+    document.getElementById('openDate').addEventListener('change', (event) => {
+        document.getElementById('openPeriod').value = formatPeriod(event.target.value);
+    });
 
-        // Prevent form submission
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
-        });
-    </script>
-</body>
-</html>
+    // Event listener for the Invoice date field to populate Invoice Period
+    document.getElementById('invoiceDate').addEventListener('change', (event) => {
+        document.getElementById('invoicePeriod').value = formatPeriod(event.target.value);
+    });
+
+    // Prevent form submission
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
+    });
+</script>
