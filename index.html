@@ -1,69 +1,136 @@
-<script>
-    // Supabase credentials.
-    const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
-    const CUSTOMERS_TABLE_NAME = 'customer_data'; // ✅ CORRECTED TABLE NAME
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CRM</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        button { margin-top: 20px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
 
-    // Initialize Supabase client
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    <div class="container">
+        <h1>Customer Management</h1>
+        <form id="inputForm">
+            <div>
+                <label for="finconCode">FINCON CODE:</label>
+                <input type="text" id="finconCode" name="finconCode" required>
+            </div>
+            <div>
+                <label for="clientType">Client Type:</label>
+                <input type="text" id="clientType" name="clientType">
+            </div>
+            <div>
+                <label for="contactName">Contact Name:</label>
+                <input type="text" id="contactName" name="contactName">
+            </div>
+            <div>
+                <label for="contactTitle">Contact Title:</label>
+                <input type="text" id="contactTitle" name="contactTitle">
+            </div>
+            <div>
+                <label for="contactDetails">Contact Details:</label>
+                <textarea id="contactDetails" name="contactDetails"></textarea>
+            </div>
+            <div>
+                <label for="areaOfInterest">Area of Interest:</label>
+                <input type="text" id="areaOfInterest" name="areaOfInterest">
+            </div>
+            <div>
+                <label for="openDate">Open Date:</label>
+                <input type="date" id="openDate" name="openDate">
+            </div>
+            <div>
+                <label for="openPeriod">Open Period (MM-YY):</label>
+                <input type="text" id="openPeriod" name="openPeriod" readonly>
+            </div>
+            <div>
+                <label for="invoiceDate">Invoice Date:</label>
+                <input type="date" id="invoiceDate" name="invoiceDate">
+            </div>
+            <div>
+                <label for="invoicePeriod">Invoice Period (MM-YY):</label>
+                <input type="text" id="invoicePeriod" name="invoicePeriod" readonly>
+            </div>
+        </form>
+    </div>
 
-    // Event listener for the FINCON CODE input field
-    document.getElementById('finconCode').addEventListener('change', async (event) => {
-        const finconCode = event.target.value.trim().toUpperCase();
-        if (finconCode) {
-            try {
-                const { data: customer, error } = await _supabase
-                    .from(CUSTOMERS_TABLE_NAME)
-                    .select('"Client Type", "Contact Name", "Contact Title", "Contact details", "Area of interest"')
-                    .eq('"FINCON CODE"', finconCode) 
-                    .single(); 
+    <script>
+        // Supabase credentials.
+        const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
+        const CUSTOMERS_TABLE_NAME = 'customer_data'; // ✅ CORRECTED TABLE NAME
 
-                if (error) {
-                    if (error.code === 'PGRST116') {
-                        document.getElementById('inputForm').reset();
-                        document.getElementById('finconCode').value = finconCode; 
-                        alert('No customer found with that FINCON CODE.');
-                    } else {
-                        throw error;
+        // Initialize Supabase client
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Event listener for the FINCON CODE input field
+        document.getElementById('finconCode').addEventListener('change', async (event) => {
+            const finconCode = event.target.value.trim().toUpperCase();
+            if (finconCode) {
+                try {
+                    const { data: customer, error } = await _supabase
+                        .from(CUSTOMERS_TABLE_NAME)
+                        .select('"Client Type", "Contact Name", "Contact Title", "Contact details", "Area of interest"')
+                        .eq('"FINCON CODE"', finconCode)
+                        .single();
+
+                    if (error) {
+                        if (error.code === 'PGRST116') {
+                            document.getElementById('inputForm').reset();
+                            document.getElementById('finconCode').value = finconCode;
+                            alert('No customer found with that FINCON CODE.');
+                        } else {
+                            throw error;
+                        }
                     }
-                }
-                
-                if (customer) {
-                    document.getElementById('clientType').value = customer['Client Type'] || '';
-                    document.getElementById('contactName').value = customer['Contact Name'] || '';
-                    document.getElementById('contactTitle').value = customer['Contact Title'] || '';
-                    document.getElementById('contactDetails').value = customer['Contact details'] || '';
-                    document.getElementById('areaOfInterest').value = customer['Area of interest'] || '';
-                }
 
-            } catch (error) {
-                console.error('Lookup failed:', error.message);
-                alert('An error occurred during lookup. Check the console for details.');
+                    if (customer) {
+                        document.getElementById('clientType').value = customer['Client Type'] || '';
+                        document.getElementById('contactName').value = customer['Contact Name'] || '';
+                        document.getElementById('contactTitle').value = customer['Contact Title'] || '';
+                        document.getElementById('contactDetails').value = customer['Contact details'] || '';
+                        document.getElementById('areaOfInterest').value = customer['Area of interest'] || '';
+                    }
+
+                } catch (error) {
+                    console.error('Lookup failed:', error.message);
+                    alert('An error occurred during lookup. Check the console for details.');
+                }
             }
+        });
+
+        // Function to format a date to MM-YY
+        function formatPeriod(dateInput) {
+            if (!dateInput) return '';
+            const date = new Date(dateInput);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear().toString().slice(-2);
+            return `${month}-${year}`;
         }
-    });
 
-    // Function to format a date to MM-YY
-    function formatPeriod(dateInput) {
-        if (!dateInput) return '';
-        const date = new Date(dateInput);
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear().toString().slice(-2);
-        return `${month}-${year}`;
-    }
+        // Event listener for the Open date field to populate Open Period
+        document.getElementById('openDate').addEventListener('change', (event) => {
+            document.getElementById('openPeriod').value = formatPeriod(event.target.value);
+        });
 
-    // Event listener for the Open date field to populate Open Period
-    document.getElementById('openDate').addEventListener('change', (event) => {
-        document.getElementById('openPeriod').value = formatPeriod(event.target.value);
-    });
+        // Event listener for the Invoice date field to populate Invoice Period
+        document.getElementById('invoiceDate').addEventListener('change', (event) => {
+            document.getElementById('invoicePeriod').value = formatPeriod(event.target.value);
+        });
 
-    // Event listener for the Invoice date field to populate Invoice Period
-    document.getElementById('invoiceDate').addEventListener('change', (event) => {
-        document.getElementById('invoicePeriod').value = formatPeriod(event.target.value);
-    });
-
-    // Prevent form submission
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
-    });
-</script>
+        // Prevent form submission
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
+        });
+    </script>
+</body>
+</html>
