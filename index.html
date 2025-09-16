@@ -8,6 +8,15 @@ const { createClient } = supabase;
 const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     // 2. User Authentication and State Management
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DAS OT - CRM Dashboard</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
     let currentUser = null;
     let customers = [];
     let opportunities = [];
@@ -244,3 +253,4 @@ const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
     }
 </script>
+
