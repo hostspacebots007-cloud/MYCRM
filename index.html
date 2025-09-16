@@ -135,9 +135,9 @@
         .login-section input {
             margin-bottom: 10px;
         }
-        
+         
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -145,7 +145,7 @@
         <header>
             <h1>DAS OT - CRM Dashboard</h1>
         </header>
-        
+         
         <div class="tab-buttons">
             <button class="tab-button active" onclick="openTab('dashboard')">Dashboard</button>
             <button class="tab-button" onclick="openTab('add-opportunity')">Add New Opportunity</button>
@@ -291,7 +291,7 @@
                 <button type="button" onclick="addSalesOpportunity()">Submit Opportunity</button>
             </form>
         </div>
-        
+         
         <div id="customer-data" class="tab-content">
             <h2>Customer Data</h2>
             <input type="text" id="customerSearch" oninput="filterCustomers()" placeholder="Search customers...">
@@ -325,19 +325,16 @@
     </div>
 
     <script>
-        // 1. Supabase Initialization
         const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
+        const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // 2. User Authentication and State Management
+        // User Authentication and State Management
         let currentUser = null;
         let customers = [];
         let opportunities = [];
 
-        _supabase.auth.onAuthStateChange((event, session) => {
+        supabase.auth.onAuthStateChange((event, session) => {
             if (session) {
                 currentUser = session.user;
                 // Fetch data for the current user once logged in
@@ -355,9 +352,9 @@
             }
         });
 
-        // 3. Functions to interact with Supabase
+        // Functions to interact with Supabase
         async function fetchCustomers() {
-            const { data, error } = await _supabase.from('customers').select('*');
+            const { data, error } = await supabase.from('customers').select('*');
             if (error) {
                 console.error('Error fetching customers:', error);
             } else {
@@ -367,17 +364,17 @@
         }
 
         async function fetchOpportunities() {
-            const { data, error } = await _supabase.from('opportunities').select('*');
+            const { data, error } = await supabase.from('opportunities').select('*');
             if (error) {
                 console.error('Error fetching opportunities:', error);
             } else {
                 opportunities = data;
                 renderOpportunities();
-                updateDashboard();
+                updateDashboard(opportunities);
             }
         }
 
-        // 4. Update existing functions to use Supabase instead of in-memory data
+        // Update existing functions to use Supabase instead of in-memory data
         function lookupCustomer() {
             const customerCode = document.getElementById("finconCode").value.toUpperCase();
             const customer = customers.find(c => c.accno === customerCode);
@@ -425,7 +422,7 @@
                 comments: document.getElementById("comments").value
             };
 
-            const { data, error } = await _supabase.from('opportunities').insert([newOpportunity]);
+            const { data, error } = await supabase.from('opportunities').insert([newOpportunity]);
             if (error) {
                 console.error('Error adding sales opportunity:', error);
                 alert("Error adding sales opportunity. See console for details.");
@@ -507,7 +504,7 @@
             });
         }
 
-        function updateDashboard() {
+        function updateDashboard(opportunities) {
             const totalOpportunitiesValue = opportunities.reduce((sum, opp) => sum + (opp.opportunityValue || 0), 0);
             const totalSalesValue = opportunities.reduce((sum, opp) => sum + (opp.salesMade || 0), 0);
             const wonOpportunities = opportunities.filter(opp => opp.status && opp.status.toLowerCase() === 'won');
@@ -518,12 +515,12 @@
             document.getElementById('closeRate').textContent = `${closeRate.toFixed(2)}%`;
             document.querySelector('.progress-fill').style.width = `${closeRate}%`;
         }
-        
+         
         // This function is new and not fully implemented yet, but will allow editing
         function editCustomer(accno) {
             alert(`Edit customer functionality for ${accno} will be added later!`);
         }
-        
+         
         function openTab(tabId) {
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => {
@@ -539,24 +536,16 @@
         }
 
         // Initial render on page load
-        document.addEventListener('DOMContentLoaded', () => {
-             // This needs to be done here to ensure the form can be reset
+        document.addEventListener('DOMContentLoaded', async () => {
+            await renderOpportunities();
+            await renderCustomers();
+            // This needs to be done here to ensure the form can be reset
             document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
-            // Check for a session and load data if the user is already logged in
-            _supabase.auth.getSession().then(({ data: { session } }) => {
-                if (session) {
-                    currentUser = session.user;
-                    fetchCustomers();
-                    fetchOpportunities();
-                } else {
-                    // This will be handled by the onAuthStateChange listener
-                }
-            });
         });
 
         // Functions for Authentication
         async function signUp(email, password) {
-            const { user, error } = await _supabase.auth.signUp({
+            const { user, error } = await supabase.auth.signUp({
                 email: email,
                 password: password
             });
@@ -568,7 +557,7 @@
         }
 
         async function signIn(email, password) {
-            const { user, error } = await _supabase.auth.signInWithPassword({
+            const { user, error } = await supabase.auth.signInWithPassword({
                 email: email,
                 password: password
             });
@@ -582,7 +571,7 @@
 
         // Add a logout function
         async function signOut() {
-            const { error } = await _supabase.auth.signOut();
+            const { error } = await supabase.auth.signOut();
             if (error) {
                 alert(error.message);
             } else {
@@ -590,7 +579,7 @@
                 openTab('login-signup'); // Redirect to login page
             }
         }
-        
+         
     </script>
 </body>
 </html>
