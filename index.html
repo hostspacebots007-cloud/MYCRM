@@ -81,7 +81,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -125,108 +125,115 @@
     
     <div class="container">
         <div class="dashboard-section">
-            <h2>Dashboard Overview</h2>
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3>Overall Performance</h3>
-                    <p>Total Opportunities Value: P <span id="totalOpportunities">0.00</span></p>
-                    <p>Total Sales Value: P <span id="totalSales">0.00</span></p>
-                    <p>Won Opportunities: <span id="wonOpportunities">0</span></p>
-                    <p>Close Rate: <span id="closeRate">0.00%</span></p>
-                </div>
-                <div class="dashboard-card">
-                    <h3>Customer Information</h3>
-                    <form id="inputForm">
-                        <div class="form-group">
-                            <label for="accno">ACCNO:</label>
-                            <input type="text" id="accno" name="accno" placeholder="Enter Account Number">
-                        </div>
-                        <div class="form-group">
-                            <label for="companyName">Company Name:</label>
-                            <input type="text" id="companyName" name="companyName">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactPerson">Contact Person:</label>
-                            <input type="text" id="contactPerson" name="contactPerson">
-                        </div>
-                        <div class="form-group">
-                            <label for="number">Number:</label>
-                            <input type="text" id="number" name="number">
-                        </div>
-                        <div class="form-group">
-                            <label for="designation">Designation:</label>
-                            <input type="text" id="designation" name="designation">
-                        </div>
-                        <div class="form-group">
-                            <label for="areaOfInterest">Area of Interest:</label>
-                            <input type="text" id="areaOfInterest" name="areaOfInterest">
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-submit">Save</button>
-                            <button type="reset" class="btn-submit">Reset</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="dashboard-section">
-            <h2>Customer List</h2>
+            <h2>New Sales Opportunity</h2>
             <div class="dashboard-card">
-                <div style="max-height: 400px; overflow-y: auto;">
-                    <table id="customersTable">
-                        <thead>
-                            <tr>
-                                <th>ACCNO</th>
-                                <th>Company Name</th>
-                                <th>Contact Person</th>
-                                <th>Designation</th>
-                                <th>Area of Interest</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            </tbody>
-                    </table>
-                </div>
+                <h3>Form</h3>
+                <form id="inputForm">
+                    <div class="dashboard-grid">
+                        <div class="form-group">
+                            <label for="finconCode">FINCON CODE:</label>
+                            <input type="text" id="finconCode" name="finconCode" placeholder="Enter FINCON CODE">
+                        </div>
+                        <div class="form-group">
+                            <label for="clientType">Client Type:</label>
+                            <input type="text" id="clientType" name="clientType" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactName">Contact Name:</label>
+                            <input type="text" id="contactName" name="contactName" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactTitle">Contact Title:</label>
+                            <input type="text" id="contactTitle" name="contactTitle" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="contactDetails">Contact Details:</label>
+                            <input type="text" id="contactDetails" name="contactDetails" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="areaOfInterest">Area of interest:</label>
+                            <input type="text" id="areaOfInterest" name="areaOfInterest" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="openDate">Open date:</label>
+                            <input type="date" id="openDate" name="openDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="openPeriod">Open Period:</label>
+                            <input type="text" id="openPeriod" name="openPeriod" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="opportunityValue">Opportunity Value:</label>
+                            <input type="number" id="opportunityValue" name="opportunityValue">
+                        </div>
+                        <div class="form-group">
+                            <label for="likelihood">Likelihood of success?:</label>
+                            <input type="number" id="likelihood" name="likelihood">
+                        </div>
+                        <div class="form-group">
+                            <label for="modeOfSale">Mode of Sale:</label>
+                            <select id="modeOfSale" name="modeOfSale">
+                                <option value="">Select...</option>
+                                <option value="Walk in">Walk in</option>
+                                <option value="Email">Email</option>
+                                <option value="Customer Visit">Customer Visit</option>
+                                <option value="Whatsapp">Whatsapp</option>
+                                <option value="Government">Government</option>
+                                <option value="Telephone Call">Telephone Call</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="">Select...</option>
+                                <option value="Open">Open</option>
+                                <option value="Escalated">Escalated</option>
+                                <option value="ARQ">Awaiting Response to Quote (ARQ)</option>
+                                <option value="Won">Won</option>
+                                <option value="Lost">Lost</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                         <div class="form-group">
+                            <label for="salesMade">Sales Made (BWP):</label>
+                            <input type="number" id="salesMade" name="salesMade">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoiceDate">Invoice Date:</label>
+                            <input type="date" id="invoiceDate" name="invoiceDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="invoicePeriod">Invoice Period:</label>
+                            <input type="text" id="invoicePeriod" name="invoicePeriod" readonly>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">Save</button>
+                        <button type="reset" class="btn-submit">Reset</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
-        // You MUST replace the placeholder values below with your actual Supabase credentials.
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const CUSTOMERS_TABLE_NAME = 'your_customers_table_name'; // e.g., 'customers'
+        // Supabase credentials. These have been updated with the values you provided.
+        const SUPABASE_URL = 'https://kiqfxehakdabwbqdpblx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtpcWZ4ZWhha2RhYndicWRwYmx4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwMzA0ODgsImV4cCI6MjA3MzYwNjQ4OH0.HF_TgfMxNOVKGXHie0QGG_RsX-P9QvuTty4Wk3Hn_Fs';
+        const CUSTOMERS_TABLE_NAME = 'Das'; // Assumes your sheet is called 'Das'
 
         // Initialize Supabase client
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // This function will fetch customer data from Supabase
-        async function fetchCustomers() {
-            try {
-                const { data, error } = await _supabase
-                    .from(CUSTOMERS_TABLE_NAME)
-                    .select('*');
-                
-                if (error) {
-                    throw error;
-                }
-                return data;
-            } catch (error) {
-                console.error('Error fetching customers:', error.message);
-                return [];
-            }
-        }
-
-        // Event listener for the Account Number input field
-        document.getElementById('accno').addEventListener('change', async (event) => {
-            const accno = event.target.value.trim().toUpperCase();
-            if (accno) {
+        // Event listener for the FINCON CODE input field
+        document.getElementById('finconCode').addEventListener('change', async (event) => {
+            const finconCode = event.target.value.trim().toUpperCase();
+            if (finconCode) {
                 try {
                     const { data, error } = await _supabase
                         .from(CUSTOMERS_TABLE_NAME)
-                        .select('*')
-                        .eq('ACCNO', accno)
+                        .select('Client Type, "Contact Name", "Contact Title", "Contact details", "Area of interest"')
+                        .eq('FINCON CODE', finconCode)
                         .limit(1);
 
                     if (error) {
@@ -235,19 +242,19 @@
                     
                     if (data && data.length > 0) {
                         const customer = data[0];
-                        document.getElementById('companyName').value = customer['Company name'] || '';
-                        document.getElementById('contactPerson').value = customer['Contact person'] || '';
-                        document.getElementById('number').value = customer['Number'] || '';
-                        document.getElementById('designation').value = customer['Designation'] || '';
-                        document.getElementById('areaOfInterest').value = customer['Area of Interest'] || '';
+                        document.getElementById('clientType').value = customer['Client Type'] || '';
+                        document.getElementById('contactName').value = customer['Contact Name'] || '';
+                        document.getElementById('contactTitle').value = customer['Contact Title'] || '';
+                        document.getElementById('contactDetails').value = customer['Contact details'] || '';
+                        document.getElementById('areaOfInterest').value = customer['Area of interest'] || '';
                     } else {
                         // Clear the form if no match is found
-                        document.getElementById('companyName').value = '';
-                        document.getElementById('contactPerson').value = '';
-                        document.getElementById('number').value = '';
-                        document.getElementById('designation').value = '';
+                        document.getElementById('clientType').value = '';
+                        document.getElementById('contactName').value = '';
+                        document.getElementById('contactTitle').value = '';
+                        document.getElementById('contactDetails').value = '';
                         document.getElementById('areaOfInterest').value = '';
-                        alert('No customer found with that Account Number.');
+                        alert('No customer found with that FINCON CODE.');
                     }
                 } catch (error) {
                     console.error('Lookup failed:', error.message);
@@ -256,35 +263,27 @@
             }
         });
 
-        async function renderCustomers() {
-            const customers = await fetchCustomers();
-            const customersBody = document.querySelector('#customersTable tbody');
-            customersBody.innerHTML = '';
-            customers.forEach(customer => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${customer.ACCNO || ''}</td>
-                    <td>${customer['Company name'] || ''}</td>
-                    <td>${customer['Contact person'] || ''}</td>
-                    <td>${customer.Designation || ''}</td>
-                    <td>${customer['Area of Interest'] || ''}</td>
-                `;
-                customersBody.appendChild(row);
-            });
-        }
-        
-        function updateDashboard() {
-            // This function would need to be updated to fetch data from an opportunities table in Supabase
-            // For now, it will show static placeholder values.
-            document.getElementById('totalOpportunities').textContent = 'Loading...';
-            document.getElementById('totalSales').textContent = 'Loading...';
-            document.getElementById('wonOpportunities').textContent = 'Loading...';
-            document.getElementById('closeRate').textContent = 'Loading...';
+        // Function to format a date to MM-YY
+        function formatPeriod(dateInput) {
+            if (!dateInput) return '';
+            const date = new Date(dateInput);
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear().toString().slice(-2);
+            return `${month}-${year}`;
         }
 
+        // Event listener for the Open date field to populate Open Period
+        document.getElementById('openDate').addEventListener('change', (event) => {
+            document.getElementById('openPeriod').value = formatPeriod(event.target.value);
+        });
+
+        // Event listener for the Invoice date field to populate Invoice Period
+        document.getElementById('invoiceDate').addEventListener('change', (event) => {
+            document.getElementById('invoicePeriod').value = formatPeriod(event.target.value);
+        });
+
+        // Prevent form submission
         document.addEventListener('DOMContentLoaded', () => {
-            renderCustomers();
-            updateDashboard();
             document.getElementById("inputForm").addEventListener("submit", (e) => e.preventDefault());
         });
     </script>
